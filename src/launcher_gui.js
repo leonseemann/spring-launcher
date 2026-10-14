@@ -1,7 +1,7 @@
 'use strict';
 
 const electron = require('electron');
-const { app, BrowserWindow, Menu, Tray, dialog, ipcMain } = electron;
+const { app, BrowserWindow, Menu, Tray, dialog, ipcMain, nativeImage } = electron;
 const { writePath } = require('./spring_platform');
 const { config } = require('./launcher_config');
 const dimensions = require('./renderer/dimensions');
@@ -47,7 +47,12 @@ app.prependListener('ready', () => {
 		},
 	};
 	windowOpts.resizable = true; // enable resizing here, because this is what gets passed to spring.exe, and we want that to be resizeable
-	Menu.setApplicationMenu(null);
+	if (process.platform === 'darwin') {
+		// keeps Quit and the clipboard shortcuts working
+		Menu.setApplicationMenu(Menu.buildFromTemplate([{ role: 'appMenu' }, { role: 'editMenu' }]));
+	} else {
+		Menu.setApplicationMenu(null);
+	}
 	mainWindow = new BrowserWindow(windowOpts);
 
 	require('@electron/remote/main').enable(mainWindow.webContents);
@@ -59,7 +64,12 @@ app.prependListener('ready', () => {
 		app.quit();
 	});
 
-	tray = new Tray(`${__dirname}/renderer/spring-icon.png`);
+	let trayIcon = nativeImage.createFromPath(`${__dirname}/renderer/spring-icon.png`);
+	if (process.platform === 'darwin') {
+		// the menu bar shows images at their full size
+		trayIcon = trayIcon.resize({ height: 18 });
+	}
+	tray = new Tray(trayIcon);
 	var template = [
 		// TODO: About dialog that shows URL, author, version, etc.
 		// {

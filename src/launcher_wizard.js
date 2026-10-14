@@ -267,7 +267,7 @@ class Wizard extends EventEmitter {
 
 		let enginePath;
 		if (config.launch.engine_path != null) {
-			enginePath = config.launch.engine_path;
+			enginePath = springPlatform.resolveAppPath(config.launch.engine_path);
 		} else {
 			const engineName = config.launch.engine || config.downloads.engines[0];
 			if (engineName != null) {
@@ -281,6 +281,10 @@ class Wizard extends EventEmitter {
 					setTimeout(() => {
 						if (launcher.state != 'failed') {
 							mainWindow.hide();
+							// the engine has a Dock icon of its own
+							if (process.platform === 'darwin') {
+								app.dock.hide();
+							}
 						}
 					}, 1000);
 

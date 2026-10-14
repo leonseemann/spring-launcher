@@ -71,7 +71,7 @@ let prDownloaderBin;
 if (platformName === 'win32') {
 	prDownloaderBin = 'pr-downloader.exe';
 	exports.springBin = 'spring.exe';
-} else if (platformName === 'linux') {
+} else if (platformName === 'linux' || platformName === 'darwin') {
 	prDownloaderBin = 'pr-downloader';
 	exports.springBin = 'spring';
 } else {
@@ -79,9 +79,28 @@ if (platformName === 'win32') {
 	process.exit(-1);
 }
 
-exports.prDownloaderPath = path.resolve(`${__dirname}/../bin/${prDownloaderBin}`);
-if (!existsSync(exports.prDownloaderPath)) {
-	exports.prDownloaderPath = path.resolve(`${process.resourcesPath}/../bin/${prDownloaderBin}`);
+// Relative paths in the config point into the application, e.g. at an engine
+// shipped with it instead of downloaded.
+function resolveAppPath(appPath) {
+	if (path.isAbsolute(appPath)) {
+		return appPath;
+	}
+	const devPath = path.resolve(`${__dirname}/../${appPath}`);
+	if (existsSync(devPath)) {
+		return devPath;
+	}
+	return path.resolve(`${process.resourcesPath}/${appPath}`);
 }
+
+if (config.pr_downloader_path != null) {
+	exports.prDownloaderPath = resolveAppPath(config.pr_downloader_path);
+} else {
+	exports.prDownloaderPath = path.resolve(`${__dirname}/../bin/${prDownloaderBin}`);
+	if (!existsSync(exports.prDownloaderPath)) {
+		exports.prDownloaderPath = path.resolve(`${process.resourcesPath}/../bin/${prDownloaderBin}`);
+	}
+}
+
+exports.resolveAppPath = resolveAppPath;
 
 exports.writePath = writePath;

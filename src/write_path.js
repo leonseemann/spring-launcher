@@ -22,6 +22,10 @@ function resolveWritePath(title) {
 		}
 	}
 
+	if (platformName === 'darwin') {
+		return path.join(app.getPath('appData'), title);
+	}
+
 	const oldDir = path.join(app.getPath('documents'), title);
 	if (fs.existsSync(oldDir)) {
 		return oldDir;

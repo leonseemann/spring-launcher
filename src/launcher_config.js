@@ -44,6 +44,11 @@ const defaultSetup = {
 	// is issue with spawning the engine because engine binary is not found.
 	'disable_engine_folder_deletion': false,
 
+	// pr-downloader binary to use instead of the one in the launcher's bin
+	// directory, e.g. the one of an engine shipped with the application.
+	// Relative paths are resolved against the application resources.
+	'pr_downloader_path': undefined,
+
 	// Default values for environment variables to be set for all the executed
 	// child processes like pr-downloader.
 	'env_variables': {},
@@ -67,6 +72,9 @@ const defaultSetup = {
 		'game': undefined,
 		'map': undefined,
 		'engine': undefined,
+		// Engine binary to start instead of the one of the downloaded 'engine',
+		// relative paths are resolved against the application resources.
+		'engine_path': undefined,
 		'map_options': undefined,
 		'mod_options': undefined,
 		'game_options': undefined,
