@@ -27,7 +27,8 @@ L="$WORK/launcher"
 
 # BAR's artwork (backgrounds, logo) has no license for redistribution, the
 # launcher keeps its own; styles and fonts (OFL) are BAR's
-rsync -a --exclude .git --exclude node_modules --exclude dist --exclude bar-mac "$SRC_DIR/" "$L/"
+mkdir -p "$L"
+cp -R "$SRC_DIR/src" "$SRC_DIR/package.json" "$SRC_DIR/package-lock.json" "$SRC_DIR/LICENSE" "$L/"
 rsync -a --exclude /renderer/images --exclude /renderer/spring-icon.png \
 	--exclude /renderer/exts/random_background.js --exclude /build/icon.png \
 	--exclude /config.json "$CHOBBY_SRC/dist_cfg/" "$L/src/"
