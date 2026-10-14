@@ -68,17 +68,22 @@ if (existsSync(FILES_DIR) && existsSync(writePath)) {
 }
 
 let prDownloaderBin;
+// pr-downloader within a downloaded engine
+let enginePrDownloaderBin;
 if (platformName === 'win32') {
 	prDownloaderBin = 'pr-downloader.exe';
+	enginePrDownloaderBin = prDownloaderBin;
 	exports.springBin = 'spring.exe';
 } else if (platformName === 'linux') {
 	prDownloaderBin = 'pr-downloader';
+	enginePrDownloaderBin = prDownloaderBin;
 	exports.springBin = 'spring';
 } else if (platformName === 'darwin') {
 	prDownloaderBin = 'pr-downloader';
 	// the engine runs as the main executable of an app bundle, which gives
 	// the game its own name and icon in the Dock
 	exports.springBin = 'Engine.app/Contents/MacOS/spring';
+	enginePrDownloaderBin = 'Engine.app/Contents/Resources/pr-downloader';
 } else {
 	log.error(`Unsupported platform: ${platformName}`);
 	process.exit(-1);
@@ -97,7 +102,7 @@ exports.getPrDownloaderPath = function () {
 	}
 	const engineName = config.launch.engine || config.downloads.engines[0];
 	if (engineName != null) {
-		const enginePrDownloader = path.join(writePath, 'engine', engineName, prDownloaderBin);
+		const enginePrDownloader = path.join(writePath, 'engine', engineName, enginePrDownloaderBin);
 		if (existsSync(enginePrDownloader)) {
 			return enginePrDownloader;
 		}
