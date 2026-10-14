@@ -17,7 +17,8 @@ class PrdDownloader extends EventEmitter {
 	downloadPackage(name, args) {
 		let finished = false;
 
-		if (!fs.existsSync(springPlatform.prDownloaderPath)) {
+		const prDownloaderPath = springPlatform.getPrDownloaderPath();
+		if (!fs.existsSync(prDownloaderPath)) {
 			if (process.platform == 'win32') {
 				this.emit('failed', name,
 					'\'pr-downloader.exe\' file is missing. This issue may be caused by an ' +
@@ -32,7 +33,7 @@ class PrdDownloader extends EventEmitter {
 			return;
 		}
 
-		const prd = spawn(springPlatform.prDownloaderPath, args);
+		const prd = spawn(prDownloaderPath, args);
 		this.emit('started', name);
 
 		prd.stdout.on('data', (data) => {

@@ -71,36 +71,38 @@ let prDownloaderBin;
 if (platformName === 'win32') {
 	prDownloaderBin = 'pr-downloader.exe';
 	exports.springBin = 'spring.exe';
-} else if (platformName === 'linux' || platformName === 'darwin') {
+} else if (platformName === 'linux') {
 	prDownloaderBin = 'pr-downloader';
 	exports.springBin = 'spring';
+} else if (platformName === 'darwin') {
+	prDownloaderBin = 'pr-downloader';
+	// the engine runs as the main executable of an app bundle, which gives
+	// the game its own name and icon in the Dock
+	exports.springBin = 'Engine.app/Contents/MacOS/spring';
 } else {
 	log.error(`Unsupported platform: ${platformName}`);
 	process.exit(-1);
 }
 
-// Relative paths in the config point into the application, e.g. at an engine
-// shipped with it instead of downloaded.
-function resolveAppPath(appPath) {
-	if (path.isAbsolute(appPath)) {
-		return appPath;
-	}
-	const devPath = path.resolve(`${__dirname}/../${appPath}`);
-	if (existsSync(devPath)) {
-		return devPath;
-	}
-	return path.resolve(`${process.resourcesPath}/${appPath}`);
+exports.prDownloaderPath = path.resolve(`${__dirname}/../bin/${prDownloaderBin}`);
+if (!existsSync(exports.prDownloaderPath)) {
+	exports.prDownloaderPath = path.resolve(`${process.resourcesPath}/../bin/${prDownloaderBin}`);
 }
 
-if (config.pr_downloader_path != null) {
-	exports.prDownloaderPath = resolveAppPath(config.pr_downloader_path);
-} else {
-	exports.prDownloaderPath = path.resolve(`${__dirname}/../bin/${prDownloaderBin}`);
-	if (!existsSync(exports.prDownloaderPath)) {
-		exports.prDownloaderPath = path.resolve(`${process.resourcesPath}/../bin/${prDownloaderBin}`);
+// Without a pr-downloader of its own the launcher uses the one that comes with
+// the engine, available once the engine has been downloaded.
+exports.getPrDownloaderPath = function () {
+	if (existsSync(exports.prDownloaderPath)) {
+		return exports.prDownloaderPath;
 	}
-}
-
-exports.resolveAppPath = resolveAppPath;
+	const engineName = config.launch.engine || config.downloads.engines[0];
+	if (engineName != null) {
+		const enginePrDownloader = path.join(writePath, 'engine', engineName, prDownloaderBin);
+		if (existsSync(enginePrDownloader)) {
+			return enginePrDownloader;
+		}
+	}
+	return exports.prDownloaderPath;
+};
 
 exports.writePath = writePath;

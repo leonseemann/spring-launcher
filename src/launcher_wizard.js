@@ -267,7 +267,7 @@ class Wizard extends EventEmitter {
 
 		let enginePath;
 		if (config.launch.engine_path != null) {
-			enginePath = springPlatform.resolveAppPath(config.launch.engine_path);
+			enginePath = config.launch.engine_path;
 		} else {
 			const engineName = config.launch.engine || config.downloads.engines[0];
 			if (engineName != null) {
