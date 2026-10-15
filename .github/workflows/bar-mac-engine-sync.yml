@@ -1,0 +1,42 @@
+# Keeps the engines of bar-mac/config.json on the ones BAR uses: when BAR's
+# launcher config moves Alpha or Engine Test to another engine version, the
+# macOS setup switches to a macOS engine release of that version (see
+# bar-mac/make-config.py --sync). Fails if BAR's Alpha engine has no macOS
+# release yet, so the owner gets notified.
+#
+# Scheduled workflows only run from the default branch, which is bar-mac.
+
+name: BAR macOS engine sync
+on:
+  schedule:
+    - cron: '17 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency: bar-mac-engine-sync
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: bar-mac
+
+      - name: Update bar-mac/config.json
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          curl -fsSL --retry 3 -o "$RUNNER_TEMP/chobby-config.json" \
+            https://raw.githubusercontent.com/beyond-all-reason/BYAR-Chobby/master/dist_cfg/config.json
+          status=0
+          python3 bar-mac/make-config.py "$RUNNER_TEMP/chobby-config.json" --sync || status=$?
+          if ! git diff --quiet bar-mac/config.json; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "bar-mac: follow BAR's launcher config" bar-mac/config.json
+            git push origin HEAD:bar-mac
+          fi
+          exit $status
