@@ -1,11 +1,13 @@
 'use strict';
 
 const { ipcRenderer } = require('electron');
-const isDev = !require('@electron/remote').app.isPackaged;
+const { app } = require('@electron/remote');
+const isDev = !app.isPackaged;
 
 const btnShowDir = document.getElementById('btn-show-dir');
 const lblMainTitle = document.getElementById('title');
 const footerLinks = document.getElementById('footerLinks');
+const lblVersionInfo = document.getElementById('version-info');
 
 btnShowDir.addEventListener('click', () => {
 	ipcRenderer.send('open-install-dir');
@@ -30,9 +32,17 @@ function setMainTitle(title) {
 	lblMainTitle.innerText = title;
 }
 
+function updateVersionInfo(config) {
+	const engine = config.launch.engine_path != null
+		? null
+		: config.launch.engine || config.downloads.engines[0];
+	lblVersionInfo.innerText = `Launcher ${app.getVersion()}` + (engine ? ` · Engine ${engine}` : '');
+}
+
 module.exports = {
 	updateLinks,
 	setMainTitle,
+	updateVersionInfo,
 };
 
 // Prevent all buttons from staying focused.

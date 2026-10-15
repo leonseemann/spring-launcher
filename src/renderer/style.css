@@ -70,6 +70,15 @@ body {
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 1),
 }
 
+#version-info {
+  grid-area: links;
+  align-self: end;
+  font-size: 11px;
+  margin-left: -23px;
+  opacity: 0.7;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 1);
+}
+
 #footerLinks a {
   color: white;
   opacity: 0.7;
