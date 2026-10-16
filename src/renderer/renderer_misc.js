@@ -1,8 +1,7 @@
 'use strict';
 
 const { ipcRenderer } = require('electron');
-const { app } = require('@electron/remote');
-const isDev = !app.isPackaged;
+const isDev = !require('@electron/remote').app.isPackaged;
 
 const btnShowDir = document.getElementById('btn-show-dir');
 const lblMainTitle = document.getElementById('title');
@@ -36,7 +35,7 @@ function updateVersionInfo(config) {
 	const engine = config.launch.engine_path != null
 		? null
 		: config.launch.engine || config.downloads.engines[0];
-	lblVersionInfo.innerText = `Launcher ${app.getVersion()}` + (engine ? ` · Engine ${engine}` : '');
+	lblVersionInfo.innerText = `Launcher ${require('@electron/remote').app.getVersion()}` + (engine ? ` · Engine ${engine}` : '');
 }
 
 module.exports = {
