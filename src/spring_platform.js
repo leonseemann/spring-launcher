@@ -94,13 +94,15 @@ if (!existsSync(exports.prDownloaderPath)) {
 	exports.prDownloaderPath = path.resolve(`${process.resourcesPath}/../bin/${prDownloaderBin}`);
 }
 
+exports.getEngineName = () => config.launch.engine || config.downloads.engines[0];
+
 // Without a pr-downloader of its own the launcher uses the one that comes with
 // the engine, available once the engine has been downloaded.
 exports.getPrDownloaderPath = function () {
 	if (existsSync(exports.prDownloaderPath)) {
 		return exports.prDownloaderPath;
 	}
-	const engineName = config.launch.engine || config.downloads.engines[0];
+	const engineName = exports.getEngineName();
 	if (engineName != null) {
 		const enginePrDownloader = path.join(writePath, 'engine', engineName, enginePrDownloaderBin);
 		if (existsSync(enginePrDownloader)) {
