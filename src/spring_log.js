@@ -40,7 +40,7 @@ log.info('Begin log');
 log.info(`Log file: ${logPath}`);
 log.info(`${app.name} - ${app.getVersion()}`);
 log.info(`App path: ${app.getAppPath()}`);
-log.info(`pr-downloader path: ${springPlatform.prDownloaderPath}`);
+log.info(`pr-downloader path: ${springPlatform.getPrDownloaderPath()}`);
 log.info(`Write path: ${springPlatform.writePath}`);
 
 log.info(`Launcher configs:\n${JSON.stringify(config.getAvailableConfigs(), null, 4)}`);

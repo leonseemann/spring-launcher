@@ -72,11 +72,9 @@ let prDownloaderBin;
 let enginePrDownloaderBin;
 if (platformName === 'win32') {
 	prDownloaderBin = 'pr-downloader.exe';
-	enginePrDownloaderBin = prDownloaderBin;
 	exports.springBin = 'spring.exe';
 } else if (platformName === 'linux') {
 	prDownloaderBin = 'pr-downloader';
-	enginePrDownloaderBin = prDownloaderBin;
 	exports.springBin = 'spring';
 } else if (platformName === 'darwin') {
 	prDownloaderBin = 'pr-downloader';
@@ -96,10 +94,10 @@ if (!existsSync(exports.prDownloaderPath)) {
 
 exports.getEngineName = () => config.launch.engine || config.downloads.engines[0];
 
-// Without a pr-downloader of its own the launcher uses the one that comes with
-// the engine, available once the engine has been downloaded.
+// Without a pr-downloader of its own the macOS launcher uses the one that comes
+// with the engine, available once the engine has been downloaded.
 exports.getPrDownloaderPath = function () {
-	if (existsSync(exports.prDownloaderPath)) {
+	if (platformName !== 'darwin' || existsSync(exports.prDownloaderPath)) {
 		return exports.prDownloaderPath;
 	}
 	const engineName = exports.getEngineName();
