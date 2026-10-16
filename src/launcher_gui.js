@@ -47,12 +47,10 @@ app.prependListener('ready', () => {
 		},
 	};
 	windowOpts.resizable = true; // enable resizing here, because this is what gets passed to spring.exe, and we want that to be resizeable
-	if (process.platform === 'darwin') {
-		// keeps Quit and the clipboard shortcuts working
-		Menu.setApplicationMenu(Menu.buildFromTemplate([{ role: 'appMenu' }, { role: 'editMenu' }]));
-	} else {
-		Menu.setApplicationMenu(null);
-	}
+	// on macOS keeps Quit and the clipboard shortcuts working
+	Menu.setApplicationMenu(process.platform === 'darwin'
+		? Menu.buildFromTemplate([{ role: 'appMenu' }, { role: 'editMenu' }])
+		: null);
 	mainWindow = new BrowserWindow(windowOpts);
 
 	require('@electron/remote/main').enable(mainWindow.webContents);
