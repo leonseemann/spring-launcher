@@ -66,9 +66,7 @@ launcher.on('finished', (code) => {
 launcher.on('failed', (error) => {
 	log.error(error);
 	const mainWindow = gui.getMainWindow();
-	if (process.platform === 'darwin') {
-		app.dock.show();
-	}
+	app.dock?.show();
 	mainWindow.show();
 	setTimeout(() => {
 		gui.send('launch-failed', error);

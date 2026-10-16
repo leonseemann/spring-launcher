@@ -282,9 +282,7 @@ class Wizard extends EventEmitter {
 						if (launcher.state != 'failed') {
 							mainWindow.hide();
 							// the engine has a Dock icon of its own
-							if (process.platform === 'darwin') {
-								app.dock.hide();
-							}
+							app.dock?.hide();
 						}
 					}, 1000);
 

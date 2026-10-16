@@ -41,7 +41,7 @@ function handleConfigReload(newConfig, reloadType) {
 		case 'restart':
 			log.info('Config files are different - restarting');
 
-			if (process.platform == 'win32' || process.platform == 'darwin') {
+			if (process.platform !== 'linux') {
 				app.relaunch();
 			} else {
 				// Unfortunatelly on Linux relaunch doesn't work correctly
