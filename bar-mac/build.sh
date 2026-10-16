@@ -27,18 +27,10 @@ L="$WORK/launcher"
 
 # BAR's artwork (backgrounds, logo) has no license for redistribution, the
 # launcher keeps its own; styles and fonts (OFL) are BAR's
-mkdir -p "$L"
+mkdir -p "$L/build"
 cp -R "$SRC_DIR/src" "$SRC_DIR/package.json" "$SRC_DIR/package-lock.json" "$SRC_DIR/LICENSE" "$L/"
-rsync -a --exclude /renderer/images --exclude /renderer/spring-icon.png \
-	--exclude /renderer/exts/random_background.js --exclude /build/icon.png \
-	--exclude /config.json "$CHOBBY_SRC/dist_cfg/" "$L/src/"
-for dir in bin files build; do
-	mkdir -p "$L/$dir"
-	if [ -d "$L/src/$dir" ]; then
-		cp -R "$L/src/$dir/." "$L/$dir/"
-		rm -rf "$L/src/$dir"
-	fi
-done
+rsync -a --exclude={/renderer/images,/renderer/spring-icon.png,/renderer/exts/random_background.js,/build,/config.json} \
+	"$CHOBBY_SRC/dist_cfg/" "$L/src/"
 cp "${CONFIG:-$SRC_DIR/bar-mac/config.json}" "$L/src/config.json"
 cp "$SRC_DIR/bar-mac/icon.icns" "$L/build/icon.icns"
 node "$CHOBBY_SRC/build/make_package_json.js" "$L/package.json" "$L/src/config.json" leonseemann/spring-launcher "$APP_VERSION"
