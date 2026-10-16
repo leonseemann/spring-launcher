@@ -40,6 +40,14 @@
         "bin/*.dll"
       ]
     },
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "category": "public.app-category.games",
+      "hardenedRuntime": true
+    },
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
