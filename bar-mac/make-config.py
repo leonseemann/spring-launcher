@@ -18,6 +18,7 @@ Usage: make-config.py <BYAR-Chobby dist_cfg/config.json> <engine release tag> [e
                       [--test-engine <engine release tag>]
        make-config.py <BYAR-Chobby dist_cfg/config.json> --sync
 """
+import copy
 import json
 import os
 import re
@@ -33,33 +34,18 @@ def mac_setup(base, package_id, tag, version):
 	# the release tag is part of the name, so fixed builds of the same engine
 	# version are downloaded again
 	engine = f"recoil_{version}_{tag}"
-	resources = [r for r in base["downloads"].get("resources", []) if not r["destination"].startswith("engine/")]
+	setup = copy.deepcopy(base)
+	setup["package"].update(id=package_id, platform="darwin")
+	setup["config_url"] = CONFIG_URL
+	resources = [r for r in setup["downloads"]["resources"] if not r["destination"].startswith("engine/")]
 	resources.append({
 		"url": f"https://github.com/{ENGINE_REPO}/releases/download/{tag}/recoil_{version}_arm64-macos.7z",
 		"destination": f"engine/{engine}",
 		"extract": True,
 	})
-	return {
-		"package": {
-			"id": package_id,
-			"display": base["package"]["display"],
-			"platform": "darwin",
-		},
-		"config_url": CONFIG_URL,
-		"env_variables": base["env_variables"],
-		"auto_download": True,
-		"downloads": {
-			"games": base["downloads"]["games"],
-			"resources": resources,
-		},
-		"no_start_script": base["no_start_script"],
-		"logs_s3_bucket": base.get("logs_s3_bucket"),
-		"launch": {
-			"start_args": base["launch"]["start_args"],
-			"engine": engine,
-			"springsettings": base["launch"].get("springsettings", {}),
-		},
-	}
+	setup["downloads"]["resources"] = resources
+	setup["launch"]["engine"] = engine
+	return setup
 
 
 def find_setup(config, package_id):
