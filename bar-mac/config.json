@@ -74,8 +74,8 @@
                         "optional": true
                     },
                     {
-                        "url": "https://github.com/leonseemann/RecoilEngine/releases/download/bar-mac-v0.4.0/recoil_2026.09.01_arm64-macos.7z",
-                        "destination": "engine/recoil_2026.09.01_bar-mac-v0.4.0",
+                        "url": "https://github.com/leonseemann/RecoilEngine/releases/download/bar-mac-v0.4.1/recoil_2026.09.01_arm64-macos.7z",
+                        "destination": "engine/recoil_2026.09.01_bar-mac-v0.4.1",
                         "extract": true
                     }
                 ]
@@ -87,7 +87,7 @@
                     "--menu",
                     "rapid://byar-chobby:test"
                 ],
-                "engine": "recoil_2026.09.01_bar-mac-v0.4.0",
+                "engine": "recoil_2026.09.01_bar-mac-v0.4.1",
                 "springsettings": {
                     "RapidTagResolutionOrder": "repos-cdn.beyondallreason.dev;repos.beyondallreason.dev"
                 }
