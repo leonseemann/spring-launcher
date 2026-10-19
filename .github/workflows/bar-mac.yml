@@ -69,7 +69,8 @@ jobs:
         run: |
           if [ "$IS_RELEASE" = true ]; then
             export APP_VERSION="${GITHUB_REF_NAME#v}"
-            export UPDATE_URL="https://github.com/$GITHUB_REPOSITORY/releases/latest/download"
+            # the launcher moved to BYAR-Chobby's macOS build, this release hands the update over
+            export UPDATE_URL="https://github.com/leonseemann/BYAR-Chobby/releases/latest/download"
             if [ "$HAS_NOTARY" = true ] && [ -n "${SIGN_IDENTITY:-}" ]; then
               export NOTARIZE=1
             fi
